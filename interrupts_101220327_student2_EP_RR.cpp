@@ -5,7 +5,7 @@
  * 
  */
 
-#include<interrupts_student1_student2.hpp>
+#include<interrupts_101220327_student2.hpp>
 
 void FCFS(std::vector<PCB> &ready_queue) {
     std::sort( 
@@ -17,11 +17,14 @@ void FCFS(std::vector<PCB> &ready_queue) {
             );
 }
 
-void ExternalPriority(std::vector<PCB>& ready_queue) {
-    std::sort( ready_queue.begin(), ready_queue.end(),
-               [](const PCB &a, const PCB &b){
-                   return a.priority < b.priority;
-               });
+void PrioritySort(std::vector<PCB> &ready_queue) {
+    std::sort(
+        ready_queue.begin(), 
+        ready_queue.end(),
+        [](const PCB &a, const PCB &b){
+            return a.priority < b.priority;
+        }
+    );
 }
 
 std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std::vector<PCB> list_processes) {
@@ -39,6 +42,9 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
     //Initialize an empty running process
     idle_CPU(running);
 
+    unsigned int quantum = 100;
+    unsigned int time_slice = 0;
+
     std::string execution_status;
 
     //make the output table (the header row)
@@ -47,7 +53,7 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
     //Loop while till there are no ready or waiting processes.
     //This is the main reason I have job_list, you don't have to use it.
     while(!all_process_terminated(job_list) || job_list.empty()) {
-    
+
         //Inside this loop, there are three things you must do:
         // 1) Populate the ready queue with processes as they arrive
         // 2) Manage the wait queue
@@ -70,75 +76,88 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
 
         ///////////////////////MANAGE WAIT QUEUE/////////////////////////
         //This mainly involves keeping track of how long a process must remain in the ready queue
-      for (auto it = wait_queue.begin(); it != wait_queue.end(); ) {
+        for (auto it = wait_queue.begin(); it != wait_queue.end();) {
             it->io_duration--;
-
             if (it->io_duration == 0) {
-                states old_state = it->state;
-
+                states old = it->state;
                 it->state = READY;
                 ready_queue.push_back(*it);
                 sync_queue(job_list, *it);
-
-                execution_status += print_exec_status(
-                    current_time, it->PID, old_state, READY
-                );
-
+                execution_status += print_exec_status(current_time, it->PID, old, READY);
                 it = wait_queue.erase(it);
-            } else {
-                ++it;
-            }
+            } else ++it;
         }
         /////////////////////////////////////////////////////////////////
 
         //////////////////////////SCHEDULER//////////////////////////////
-        //FCFS(ready_queue);
-        ExternalPriority(ready_queue);
-        if (running.state != RUNNING && !ready_queue.empty()) {
-            PCB old = running;
-            run_process(running, job_list, ready_queue, current_time);
-
-            execution_status += print_exec_status(
-                current_time, running.PID, old.state, RUNNING
-            );
-        }
-
+        //FCFS(ready_queue); //example of FCFS is shown here
         if (running.state == RUNNING) {
             running.remaining_time--;
+            time_slice++;
+            unsigned int executed = running.processing_time - running.remaining_time;
 
-            unsigned int executed =
-                running.processing_time - running.remaining_time;
-            if (running.io_freq != 0 &&
-                executed == running.io_freq &&
-                running.remaining_time > 0)
-            {
-                states old_state = running.state;
 
+            if (running.io_freq != 0 && executed == running.io_freq && running.remaining_time > 0) {
+                states old = running.state;
                 running.state = WAITING;
                 wait_queue.push_back(running);
                 sync_queue(job_list, running);
-
-                execution_status += print_exec_status(
-                    current_time, running.PID, old_state, WAITING
-                );
+                execution_status += print_exec_status(current_time, running.PID, old, WAITING);
                 running.io_freq = 0;
                 idle_CPU(running);
+                time_slice = 0;
             }
-            else if (running.remaining_time == 0) {
-                states old_state = running.state;
 
-                terminate_process(running, job_list);
-                execution_status += print_exec_status(
-                    current_time, running.PID, old_state, TERMINATED
-                );
-
+            else if (running.remaining_time > 0 && time_slice == quantum) {
+                states old = running.state;
+                running.state = READY;
+                ready_queue.push_back(running);
+                sync_queue(job_list, running);
+                execution_status += print_exec_status(current_time, running.PID, old, READY);
                 idle_CPU(running);
+                time_slice = 0;
+            }
+
+            else if (running.remaining_time == 0) {
+                states old = running.state;
+                terminate_process(running, job_list);
+                execution_status += print_exec_status(current_time, running.PID, old, TERMINATED);
+                idle_CPU(running);
+                time_slice = 0;
             }
             else {
                 sync_queue(job_list, running);
             }
         }
+
+        if (running.state == RUNNING && !ready_queue.empty()) {
+            PrioritySort(ready_queue);
+            if (ready_queue.front().priority < running.priority) {
+                states old = running.state;
+                running.state = READY;
+                ready_queue.push_back(running);
+                sync_queue(job_list, running);
+                execution_status += print_exec_status(current_time, running.PID, old, READY);
+                idle_CPU(running);
+                time_slice = 0;
+            }
+        }
+
+        if (running.state != RUNNING && !ready_queue.empty()) {
+            PrioritySort(ready_queue);
+            PCB old = running;
+            running = ready_queue.front();
+            ready_queue.erase(ready_queue.begin());
+            running.start_time = current_time;
+            running.state = RUNNING;
+            sync_queue(job_list, running);
+            time_slice = 0;
+            execution_status += print_exec_status(current_time, running.PID, old.state, RUNNING);
+        }
+
         current_time++;
+        /////////////////////////////////////////////////////////////////
+
     }
     
     //Close the output table
