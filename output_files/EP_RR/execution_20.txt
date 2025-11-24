@@ -1,0 +1,44 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |NOT_ASSIGNED |   RUNNING |
+|                 1 |  2 |       NEW |     READY |
+|                 1 |  1 |   RUNNING |     READY |
+|                 1 |  2 |NOT_ASSIGNED |   RUNNING |
+|                 3 |  3 |       NEW |     READY |
+|                 3 |  2 |   RUNNING |     READY |
+|                 3 |  3 |NOT_ASSIGNED |   RUNNING |
+|                 5 |  4 |       NEW |     READY |
+|                 6 |  5 |       NEW |     READY |
+|                23 |  3 |   RUNNING |   WAITING |
+|                23 |  2 |NOT_ASSIGNED |   RUNNING |
+|                24 |  2 |   RUNNING |   WAITING |
+|                24 |  4 |NOT_ASSIGNED |   RUNNING |
+|                29 |  2 |   WAITING |     READY |
+|                29 |  4 |   RUNNING |     READY |
+|                29 |  2 |NOT_ASSIGNED |   RUNNING |
+|                38 |  3 |   WAITING |     READY |
+|                38 |  2 |   RUNNING |     READY |
+|                38 |  3 |NOT_ASSIGNED |   RUNNING |
+|               108 |  3 |   RUNNING |TERMINATED |
+|               108 |  2 |NOT_ASSIGNED |   RUNNING |
+|               126 |  2 |   RUNNING |TERMINATED |
+|               126 |  4 |NOT_ASSIGNED |   RUNNING |
+|               127 |  4 |   RUNNING |   WAITING |
+|               127 |  1 |NOT_ASSIGNED |   RUNNING |
+|               131 |  1 |   RUNNING |   WAITING |
+|               131 |  5 |NOT_ASSIGNED |   RUNNING |
+|               135 |  4 |   WAITING |     READY |
+|               135 |  5 |   RUNNING |     READY |
+|               135 |  4 |NOT_ASSIGNED |   RUNNING |
+|               141 |  1 |   WAITING |     READY |
+|               169 |  4 |   RUNNING |TERMINATED |
+|               169 |  1 |NOT_ASSIGNED |   RUNNING |
+|               234 |  1 |   RUNNING |TERMINATED |
+|               234 |  5 |NOT_ASSIGNED |   RUNNING |
+|               240 |  5 |   RUNNING |   WAITING |
+|               252 |  5 |   WAITING |     READY |
+|               252 |  5 |NOT_ASSIGNED |   RUNNING |
+|               302 |  5 |   RUNNING |TERMINATED |
++------------------------------------------------+

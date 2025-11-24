@@ -1,0 +1,46 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |NOT_ASSIGNED |   RUNNING |
+|                 2 |  2 |       NEW |     READY |
+|                 3 |  3 |       NEW |     READY |
+|                 3 |  1 |   RUNNING |   WAITING |
+|                 4 |  4 |       NEW |     READY |
+|                 4 |  4 |NOT_ASSIGNED |   RUNNING |
+|                 5 |  5 |       NEW |     READY |
+|                 5 |  4 |   RUNNING |   WAITING |
+|                 6 |  6 |       NEW |     READY |
+|                 6 |  5 |NOT_ASSIGNED |   RUNNING |
+|                 7 |  7 |       NEW |     READY |
+|                 9 |  5 |   RUNNING |   WAITING |
+|                10 |  7 |NOT_ASSIGNED |   RUNNING |
+|                13 |  1 |   WAITING |     READY |
+|                13 |  4 |   WAITING |     READY |
+|                17 |  7 |   RUNNING |   WAITING |
+|                18 |  4 |NOT_ASSIGNED |   RUNNING |
+|                19 |  5 |   WAITING |     READY |
+|                24 |  7 |   WAITING |     READY |
+|                40 |  4 |   RUNNING |TERMINATED |
+|                41 |  7 |NOT_ASSIGNED |   RUNNING |
+|                92 |  7 |   RUNNING |TERMINATED |
+|                93 |  5 |NOT_ASSIGNED |   RUNNING |
+|               123 |  5 |   RUNNING |TERMINATED |
+|               124 |  3 |NOT_ASSIGNED |   RUNNING |
+|               126 |  3 |   RUNNING |   WAITING |
+|               127 |  1 |NOT_ASSIGNED |   RUNNING |
+|               141 |  3 |   WAITING |     READY |
+|               162 |  1 |   RUNNING |TERMINATED |
+|               163 |  3 |NOT_ASSIGNED |   RUNNING |
+|               209 |  3 |   RUNNING |TERMINATED |
+|               210 |  6 |NOT_ASSIGNED |   RUNNING |
+|               215 |  6 |   RUNNING |   WAITING |
+|               216 |  2 |NOT_ASSIGNED |   RUNNING |
+|               220 |  2 |   RUNNING |   WAITING |
+|               221 |  6 |   WAITING |     READY |
+|               221 |  6 |NOT_ASSIGNED |   RUNNING |
+|               232 |  2 |   WAITING |     READY |
+|               244 |  6 |   RUNNING |TERMINATED |
+|               245 |  2 |NOT_ASSIGNED |   RUNNING |
+|               284 |  2 |   RUNNING |TERMINATED |
++------------------------------------------------+

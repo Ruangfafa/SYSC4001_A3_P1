@@ -1,0 +1,40 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |NOT_ASSIGNED |   RUNNING |
+|                 3 |  2 |       NEW |     READY |
+|                 4 |  3 |       NEW |     READY |
+|                 4 |  1 |   RUNNING |     READY |
+|                 4 |  3 |NOT_ASSIGNED |   RUNNING |
+|                 6 |  4 |       NEW |     READY |
+|                 7 |  5 |       NEW |     READY |
+|                11 |  3 |   RUNNING |   WAITING |
+|                11 |  1 |NOT_ASSIGNED |   RUNNING |
+|                17 |  1 |   RUNNING |   WAITING |
+|                17 |  5 |NOT_ASSIGNED |   RUNNING |
+|                19 |  3 |   WAITING |     READY |
+|                19 |  5 |   RUNNING |     READY |
+|                19 |  3 |NOT_ASSIGNED |   RUNNING |
+|                22 |  1 |   WAITING |     READY |
+|                52 |  3 |   RUNNING |TERMINATED |
+|                52 |  5 |NOT_ASSIGNED |   RUNNING |
+|                56 |  5 |   RUNNING |   WAITING |
+|                56 |  1 |NOT_ASSIGNED |   RUNNING |
+|                60 |  5 |   WAITING |     READY |
+|                96 |  1 |   RUNNING |TERMINATED |
+|                96 |  5 |NOT_ASSIGNED |   RUNNING |
+|               115 |  5 |   RUNNING |TERMINATED |
+|               115 |  2 |NOT_ASSIGNED |   RUNNING |
+|               120 |  2 |   RUNNING |   WAITING |
+|               120 |  4 |NOT_ASSIGNED |   RUNNING |
+|               130 |  2 |   WAITING |     READY |
+|               130 |  4 |   RUNNING |     READY |
+|               130 |  2 |NOT_ASSIGNED |   RUNNING |
+|               155 |  2 |   RUNNING |TERMINATED |
+|               155 |  4 |NOT_ASSIGNED |   RUNNING |
+|               157 |  4 |   RUNNING |   WAITING |
+|               163 |  4 |   WAITING |     READY |
+|               163 |  4 |NOT_ASSIGNED |   RUNNING |
+|               211 |  4 |   RUNNING |TERMINATED |
++------------------------------------------------+

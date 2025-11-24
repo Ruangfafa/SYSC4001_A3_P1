@@ -1,0 +1,46 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |NOT_ASSIGNED |   RUNNING |
+|                 2 |  2 |       NEW |     READY |
+|                 3 |  3 |       NEW |     READY |
+|                 3 |  1 |   RUNNING |   WAITING |
+|                 4 |  4 |       NEW |     READY |
+|                 4 |  2 |NOT_ASSIGNED |   RUNNING |
+|                 5 |  5 |       NEW |     READY |
+|                 6 |  6 |       NEW |     READY |
+|                 7 |  7 |       NEW |     READY |
+|                 8 |  2 |   RUNNING |   WAITING |
+|                 9 |  3 |NOT_ASSIGNED |   RUNNING |
+|                11 |  3 |   RUNNING |   WAITING |
+|                12 |  4 |NOT_ASSIGNED |   RUNNING |
+|                13 |  1 |   WAITING |     READY |
+|                13 |  4 |   RUNNING |   WAITING |
+|                14 |  5 |NOT_ASSIGNED |   RUNNING |
+|                17 |  5 |   RUNNING |   WAITING |
+|                18 |  6 |NOT_ASSIGNED |   RUNNING |
+|                20 |  2 |   WAITING |     READY |
+|                21 |  4 |   WAITING |     READY |
+|                23 |  6 |   RUNNING |   WAITING |
+|                24 |  7 |NOT_ASSIGNED |   RUNNING |
+|                26 |  3 |   WAITING |     READY |
+|                27 |  5 |   WAITING |     READY |
+|                29 |  6 |   WAITING |     READY |
+|                31 |  7 |   RUNNING |   WAITING |
+|                32 |  1 |NOT_ASSIGNED |   RUNNING |
+|                38 |  7 |   WAITING |     READY |
+|                67 |  1 |   RUNNING |TERMINATED |
+|                68 |  2 |NOT_ASSIGNED |   RUNNING |
+|               107 |  2 |   RUNNING |TERMINATED |
+|               108 |  4 |NOT_ASSIGNED |   RUNNING |
+|               130 |  4 |   RUNNING |TERMINATED |
+|               131 |  3 |NOT_ASSIGNED |   RUNNING |
+|               177 |  3 |   RUNNING |TERMINATED |
+|               178 |  5 |NOT_ASSIGNED |   RUNNING |
+|               208 |  5 |   RUNNING |TERMINATED |
+|               209 |  6 |NOT_ASSIGNED |   RUNNING |
+|               232 |  6 |   RUNNING |TERMINATED |
+|               233 |  7 |NOT_ASSIGNED |   RUNNING |
+|               284 |  7 |   RUNNING |TERMINATED |
++------------------------------------------------+

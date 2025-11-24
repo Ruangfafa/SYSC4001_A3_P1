@@ -1,0 +1,34 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  2 |       NEW |     READY |
+|                 0 |  3 |       NEW |     READY |
+|                 0 |  4 |       NEW |     READY |
+|                 0 |  5 |       NEW |     READY |
+|                 0 |  1 |NOT_ASSIGNED |   RUNNING |
+|                 1 |  1 |   RUNNING |   WAITING |
+|                 2 |  2 |NOT_ASSIGNED |   RUNNING |
+|                 3 |  2 |   RUNNING |   WAITING |
+|                 4 |  3 |NOT_ASSIGNED |   RUNNING |
+|                 5 |  1 |   WAITING |     READY |
+|                 7 |  2 |   WAITING |     READY |
+|                13 |  3 |   RUNNING |   WAITING |
+|                14 |  4 |NOT_ASSIGNED |   RUNNING |
+|                15 |  4 |   RUNNING |   WAITING |
+|                16 |  5 |NOT_ASSIGNED |   RUNNING |
+|                17 |  5 |   RUNNING |   WAITING |
+|                18 |  1 |NOT_ASSIGNED |   RUNNING |
+|                19 |  4 |   WAITING |     READY |
+|                21 |  5 |   WAITING |     READY |
+|                23 |  3 |   WAITING |     READY |
+|                35 |  1 |   RUNNING |TERMINATED |
+|                36 |  2 |NOT_ASSIGNED |   RUNNING |
+|                53 |  2 |   RUNNING |TERMINATED |
+|                54 |  4 |NOT_ASSIGNED |   RUNNING |
+|                71 |  4 |   RUNNING |TERMINATED |
+|                72 |  5 |NOT_ASSIGNED |   RUNNING |
+|                89 |  5 |   RUNNING |TERMINATED |
+|                90 |  3 |NOT_ASSIGNED |   RUNNING |
+|               179 |  3 |   RUNNING |TERMINATED |
++------------------------------------------------+
