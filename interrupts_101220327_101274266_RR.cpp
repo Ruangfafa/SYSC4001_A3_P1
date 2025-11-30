@@ -38,6 +38,15 @@ struct ExecutionLog{
     std::string newState;
 };
 
+//Obj-MemoryStatusLog
+struct MemoryStatusLog{
+    int timeOfEvent;
+    int memoryUsed;
+    std::string partitionsState;
+    int totalFreeMemory;
+    int usableFreeMemory;
+};
+
 //Func-Read input data
 std::vector<PCB> readInputDataFile(const std::string& filename){
     std::vector<PCB> tempPCBs;
@@ -92,6 +101,35 @@ void eLog(std::vector<ExecutionLog>& executionLogs, const int& tick, const PCB& 
     tempLog.oldState = oldState;
     tempLog.newState = pcb.state;
     executionLogs.push_back(tempLog);
+}
+
+//Func-Memory Status Log Maker
+void mLog(std::vector<MemoryStatusLog>& memoryStatusLogs, const int& tick, const std::vector<PCB>& PCBStack, const std::vector<Partition>& partitions){
+    MemoryStatusLog tempLog;
+
+    tempLog.timeOfEvent = tick;
+    tempLog.memoryUsed = 0;
+    for(const auto& eachPartition : partitions){
+        if (eachPartition.occupied != -1) {
+            for (const auto& eachPCB : PCBStack){
+                if (eachPCB.pid == eachPartition.occupied) {
+                    tempLog.memoryUsed += eachPCB.memorySize;
+                }
+            }
+        }
+    }
+    tempLog.partitionsState = "";
+    for (const auto& eachPartition : partitions) {
+        tempLog.partitionsState += std::to_string(eachPartition.occupied) + ", ";
+    }
+    tempLog.partitionsState.pop_back();
+    tempLog.partitionsState.pop_back();
+    tempLog.totalFreeMemory = 100-tempLog.memoryUsed;
+    tempLog.usableFreeMemory = 0;
+    for (const auto& eachPartition : partitions){
+        if (eachPartition.occupied == -1) tempLog.usableFreeMemory += eachPartition.space;
+    }
+    memoryStatusLogs.push_back(tempLog);
 }
 
 //Func-Visualization Log Maker
@@ -164,9 +202,10 @@ void partitionReleaser(const PCB& pcb, std::vector<Partition>& partitions){
 }
 
 //Func-Update waiting stack
-void updateWaitingStack(const int& tick, std::vector<PCB>& PCBStack, std::vector<Partition>& partitions){
+void updateWaitingStack(std::vector<MemoryStatusLog>& memoryStatusLogs, const int& tick, std::vector<PCB>& PCBStack, std::vector<Partition>& partitions){
     for(auto& eachPCB : PCBStack){
         if(eachPCB.state == "NEW" && eachPCB.arrivalTime <= 0 && partitionAllocator(eachPCB, partitions)){
+            mLog(memoryStatusLogs, tick, PCBStack, partitions);
             eachPCB.state = "WAITING";
         }
     }
@@ -194,12 +233,13 @@ void getNextRunningPCB(std::vector<PCB>& PCBStack, PCB*& runningSlot){
 }
 
 //Func-Update running slot
-void updateRunningSlot(std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions){
+void updateRunningSlot(std::vector<MemoryStatusLog>& memoryStatusLogs, std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions){
     if(runningSlot){
         if((runningSlot->totalTime == 0) || runningSlot->totalTime <= -1){
             runningSlot->state = "TERMINATED";
             partitionReleaser(*runningSlot, partitions);
             eLog(executionLogs, tick, *runningSlot);
+            mLog(memoryStatusLogs, tick, PCBStack, partitions);
             runningSlot = nullptr;
         }
         else if(runningSlot->totalTime >= 0 && runningSlot->eachRunTime <= 0){
@@ -293,6 +333,76 @@ void generateExecutionLogFile(const std::vector<ExecutionLog>& executionLogs){
     outfile.close();
 }
 
+//Func-Generate "memory_status.txt"
+void generateMemoryStatusLogFile(const std::vector<MemoryStatusLog>& memoryStatusLogs){
+    std::ofstream outfile("memory_status.txt");
+
+    int timeOfEventML = 13;
+    int memoryUsedML = 11;
+    int partitionsStateML = 16;
+    int totalFreeMemoryML = 17;
+    int usableFreeMemoryML = 18;
+    
+    for(const auto& eachLog : memoryStatusLogs){
+        if(std::to_string(eachLog.timeOfEvent).length() > timeOfEventML){
+            timeOfEventML = std::to_string(eachLog.timeOfEvent).length();
+        }
+        if(std::to_string(eachLog.memoryUsed).length() > memoryUsedML){
+            memoryUsedML = std::to_string(eachLog.memoryUsed).length();
+        }
+        if(eachLog.partitionsState.length() > partitionsStateML){
+            partitionsStateML = eachLog.partitionsState.length();
+        }
+        if(std::to_string(eachLog.totalFreeMemory).length() > totalFreeMemoryML){
+            totalFreeMemoryML = std::to_string(eachLog.totalFreeMemory).length();
+        }
+        if(std::to_string(eachLog.usableFreeMemory).length() > usableFreeMemoryML){
+            usableFreeMemoryML = std::to_string(eachLog.usableFreeMemory).length();
+        }
+    }
+
+    outfile << "+" << addSpace("-", timeOfEventML + memoryUsedML + partitionsStateML + totalFreeMemoryML + usableFreeMemoryML - 75) << "-----------------------------------------------------------------------------------------+" << std::endl;
+    outfile << "| " << addSpace(" ", timeOfEventML - 13) << "Time of Event | "<< addSpace(" ", memoryUsedML - 11) <<"Memory Used | " << addSpace(" ", partitionsStateML - 16) << "Partitions State | " << addSpace(" ", totalFreeMemoryML - 17) << "Total Free Memory | " << addSpace(" ", usableFreeMemoryML - 18) << "Usable Free Memory |" << std::endl;
+    outfile << "+" << addSpace("-", timeOfEventML + memoryUsedML + partitionsStateML + totalFreeMemoryML + usableFreeMemoryML - 75) << "-----------------------------------------------------------------------------------------+" << std::endl;
+
+    for(const auto& eachLog : memoryStatusLogs){
+        std::string tempTimeOfEvent = "| ";
+        std::string tempMemoryUsed;
+        std::string tempPartitionsState;
+        std::string tempTotalFreeMemory;
+        std::string tempUsableFreeMemory;
+        
+        for(int i = 0; i < timeOfEventML-std::to_string(eachLog.timeOfEvent).length(); i++){
+            tempTimeOfEvent += " ";
+        }
+        tempTimeOfEvent += std::to_string(eachLog.timeOfEvent) + " | ";
+
+        for(int i = 0; i < memoryUsedML-std::to_string(eachLog.memoryUsed).length(); i++){
+            tempMemoryUsed += " ";
+        }
+        tempMemoryUsed += std::to_string(eachLog.memoryUsed) + " | ";
+
+        for(int i = 0; i < partitionsStateML-eachLog.partitionsState.length(); i++){
+            tempPartitionsState += " ";
+        }
+        tempPartitionsState += eachLog.partitionsState + " | ";
+
+        for(int i = 0; i < totalFreeMemoryML-std::to_string(eachLog.totalFreeMemory).length(); i++){
+            tempTotalFreeMemory += " ";
+        }
+        tempTotalFreeMemory += std::to_string(eachLog.totalFreeMemory) + " | ";
+
+        for(int i = 0; i < usableFreeMemoryML-std::to_string(eachLog.usableFreeMemory).length(); i++){
+            tempUsableFreeMemory += " ";
+        }
+        tempUsableFreeMemory += std::to_string(eachLog.usableFreeMemory) + " |";
+
+        outfile << tempTimeOfEvent << tempMemoryUsed << tempPartitionsState << tempTotalFreeMemory << tempUsableFreeMemory << std::endl;
+    }
+    outfile << "+" << addSpace("-", timeOfEventML+memoryUsedML+partitionsStateML+totalFreeMemoryML+usableFreeMemoryML-75) << "-----------------------------------------------------------------------------------------+" << std::endl;
+    outfile.close();
+}
+
 //Func-Generate "visualization_logs.txt"
 void generateVisualizationLogFile(const std::vector<std::string>& visualizationLogs, const int& tick, const std::vector<PCB>& PCBStack){
     std::ofstream outfile("visualization_log.txt");
@@ -359,11 +469,12 @@ bool ifAllTerminated(std::vector<PCB>& PCBStack){
     return true;
 }
 
-void simulate(std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions, std::vector<std::string>& visualizationLogs){
+void simulate(std::vector<MemoryStatusLog>& memoryStatusLogs, std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions, std::vector<std::string>& visualizationLogs){
+    mLog(memoryStatusLogs, tick, PCBStack, partitions);
     while(!ifAllTerminated(PCBStack)){
-        updateWaitingStack(tick, PCBStack, partitions);
+        updateWaitingStack(memoryStatusLogs, tick, PCBStack, partitions);
         updateReadyStack(executionLogs, tick, PCBStack);
-        updateRunningSlot(executionLogs, tick, PCBStack, runningSlot, partitions);
+        updateRunningSlot(memoryStatusLogs, executionLogs, tick, PCBStack, runningSlot, partitions);
         runOneTick(tick, PCBStack);
 
         vLog(visualizationLogs, PCBStack);
@@ -376,11 +487,13 @@ int main(int argc, char* argv[]){
     PCB* runningSlot = nullptr;
     int tick = 0;
     std::vector<ExecutionLog> executionLogs;
+    std::vector<MemoryStatusLog> memoryStatusLogs;
     std::vector<std::string> visualizationLogs(PCBStack.size());
 
-    simulate(executionLogs, tick, PCBStack, runningSlot, partitions, visualizationLogs);
+    simulate(memoryStatusLogs, executionLogs, tick, PCBStack, runningSlot, partitions, visualizationLogs);
 
     generateExecutionLogFile(executionLogs);
+    generateMemoryStatusLogFile(memoryStatusLogs);
     generateVisualizationLogFile(visualizationLogs, tick, PCBStack);
 
     return 0;
