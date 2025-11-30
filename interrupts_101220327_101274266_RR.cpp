@@ -94,6 +94,27 @@ void eLog(std::vector<ExecutionLog>& executionLogs, const int& tick, const PCB& 
     executionLogs.push_back(tempLog);
 }
 
+//Func-Visualization Log Maker
+void vLog(std::vector<std::string>& visualizationLogs, const std::vector<PCB>& PCBStack){
+    for(int i = 0; i < PCBStack.size(); i++){
+        if(PCBStack[i].state == "NEW"){
+            visualizationLogs[i] += " ";
+        }
+        else if(PCBStack[i].state == "WAITING"){
+            visualizationLogs[i] += "-";
+        }
+        else if(PCBStack[i].state == "READY"){
+            visualizationLogs[i] += "=";
+        }
+        else if(PCBStack[i].state == "RUNNING"){
+            visualizationLogs[i] += "#";
+        }
+        else if(PCBStack[i].state == "TERMINATED"){
+            visualizationLogs[i] += "";
+        }
+    }
+}
+
 //Func-Partitions initalizer
 std::vector<Partition> partitionsInitalizer(){
     std::vector<Partition> tempPartitions;
@@ -272,6 +293,43 @@ void generateExecutionLogFile(const std::vector<ExecutionLog>& executionLogs){
     outfile.close();
 }
 
+//Func-Generate "visualization_logs.txt"
+void generateVisualizationLogFile(const std::vector<std::string>& visualizationLogs, const int& tick, const std::vector<PCB>& PCBStack){
+    std::ofstream outfile("visualization_log.txt");
+
+    int pidML = 0;
+    std::vector<int> waitingTimes(PCBStack.size(), 0);
+    int totalWaitingTime = 0;
+    int totalTurnaroundTime = 0;
+
+    for(const auto& eachPCB : PCBStack){
+        if(std::to_string(eachPCB.pid).length() > pidML){
+            pidML = std::to_string(eachPCB.pid).length();
+        }
+    }
+
+    for(int i = 0; i < visualizationLogs.size(); i++){
+        outfile << addSpace(" ", pidML - std::to_string(PCBStack[i].pid).length()) << PCBStack[i].pid << " : " << visualizationLogs[i] << std::endl;
+    }
+
+    for(int i = 0; i < PCBStack.size(); i++){
+        waitingTimes[i] += std::count(visualizationLogs[i].begin(), visualizationLogs[i].end(), '-');
+        waitingTimes[i] += std::count(visualizationLogs[i].begin(), visualizationLogs[i].end(), '=');
+        totalWaitingTime += waitingTimes[i];
+    }
+
+    for(int i = 0; i < PCBStack.size(); i++){
+        totalTurnaroundTime += std::count(visualizationLogs[i].begin(), visualizationLogs[i].end(), '-');
+        totalTurnaroundTime += std::count(visualizationLogs[i].begin(), visualizationLogs[i].end(), '=');
+        totalTurnaroundTime += std::count(visualizationLogs[i].begin(), visualizationLogs[i].end(), '#');
+    }
+
+    outfile << "Throughput: " << std::to_string(static_cast<double>(PCBStack.size())/tick) << std::endl;
+    outfile << "Average turnaround time: " << std::to_string(static_cast<double>(totalTurnaroundTime)/PCBStack.size()) << std::endl;
+    outfile << "Average Waiting Time: " << std::to_string(static_cast<double>(totalWaitingTime)/PCBStack.size()) << std::endl;
+    outfile.close();
+}
+
 //Func-Run one tick
 void runOneTick(int& tick, std::vector<PCB>& PCBStack){
     tick++;
@@ -301,12 +359,14 @@ bool ifAllTerminated(std::vector<PCB>& PCBStack){
     return true;
 }
 
-void simulate(std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions){
+void simulate(std::vector<ExecutionLog>& executionLogs, int& tick, std::vector<PCB>& PCBStack, PCB*& runningSlot, std::vector<Partition>& partitions, std::vector<std::string>& visualizationLogs){
     while(!ifAllTerminated(PCBStack)){
         updateWaitingStack(tick, PCBStack, partitions);
         updateReadyStack(executionLogs, tick, PCBStack);
         updateRunningSlot(executionLogs, tick, PCBStack, runningSlot, partitions);
         runOneTick(tick, PCBStack);
+
+        vLog(visualizationLogs, PCBStack);
     }
 }
 
@@ -316,10 +376,12 @@ int main(int argc, char* argv[]){
     PCB* runningSlot = nullptr;
     int tick = 0;
     std::vector<ExecutionLog> executionLogs;
+    std::vector<std::string> visualizationLogs(PCBStack.size());
 
-    simulate(executionLogs, tick, PCBStack, runningSlot, partitions);
+    simulate(executionLogs, tick, PCBStack, runningSlot, partitions, visualizationLogs);
 
     generateExecutionLogFile(executionLogs);
+    generateVisualizationLogFile(visualizationLogs, tick, PCBStack);
 
     return 0;
 }
