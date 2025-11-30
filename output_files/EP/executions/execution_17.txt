@@ -1,0 +1,43 @@
++---------------------------------------------------+
+| Time of Transition | PID | Old State |  New State |
++---------------------------------------------------+
+|                  0 |   1 |       NEW |      READY |
+|                  0 |   1 |     READY |    RUNNING |
+|                  3 |   2 |       NEW |      READY |
+|                  5 |   3 |       NEW |      READY |
+|                  7 |   4 |       NEW |      READY |
+|                300 |   1 |   RUNNING |    WAITING |
+|                300 |   2 |     READY |    RUNNING |
+|                360 |   1 |   WAITING |      READY |
+|                580 |   2 |   RUNNING |    WAITING |
+|                580 |   1 |     READY |    RUNNING |
+|                635 |   2 |   WAITING |      READY |
+|                880 |   1 |   RUNNING |    WAITING |
+|                880 |   2 |     READY |    RUNNING |
+|                940 |   1 |   WAITING |      READY |
+|               1160 |   2 |   RUNNING |    WAITING |
+|               1160 |   1 |     READY |    RUNNING |
+|               1215 |   2 |   WAITING |      READY |
+|               1460 |   1 |   RUNNING | TERMINATED |
+|               1460 |   2 |     READY |    RUNNING |
+|               1740 |   2 |   RUNNING |    WAITING |
+|               1740 |   3 |     READY |    RUNNING |
+|               1795 |   2 |   WAITING |      READY |
+|               2000 |   3 |   RUNNING | TERMINATED |
+|               2000 |   2 |     READY |    RUNNING |
+|               2010 |   2 |   RUNNING | TERMINATED |
+|               2010 |   4 |     READY |    RUNNING |
+|               2011 |   5 |       NEW |      READY |
+|               2290 |   4 |   RUNNING | TERMINATED |
+|               2290 |   5 |     READY |    RUNNING |
+|               2440 |   5 |   RUNNING |    WAITING |
+|               2480 |   5 |   WAITING |      READY |
+|               2480 |   5 |     READY |    RUNNING |
+|               2630 |   5 |   RUNNING |    WAITING |
+|               2670 |   5 |   WAITING |      READY |
+|               2670 |   5 |     READY |    RUNNING |
+|               2820 |   5 |   RUNNING |    WAITING |
+|               2860 |   5 |   WAITING |      READY |
+|               2860 |   5 |     READY |    RUNNING |
+|               2910 |   5 |   RUNNING | TERMINATED |
++---------------------------------------------------+

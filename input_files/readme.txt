@@ -1,21 +1,21 @@
-Scenario 1 — Mostly CPU-Bound (No I/O)
-Scenario 2 — Mostly I/O-Bound
-Scenario 3 — Balanced Mix
-Scenario 4 — Heavy Priority Differences
-Scenario 5 — All Arrive at Same Time
-Scenario 6 — CPU Burst Increases Over Time
-Scenario 7 — I/O Frequency Decreases
-Scenario 8 — Randomized Small Jobs
-Scenario 9 — All Very I/O-Heavy
-Scenario 10 — Large Memory Footprints
-Scenario 11 — Extreme Priorities
-Scenario 12 — Bursty Workload
-Scenario 13 — Late Arrivals
-Scenario 14 — High Arrival Density
-Scenario 15 — CPU Heavy 7 Jobs
-Scenario 16 — I/O Heavy 7 Jobs
-Scenario 17 — Mixed with overlapping IO bursts
-Scenario 18 — Short Quick Jobs
-Scenario 19 — Very Long I/O durations
-Scenario 20 — Completely Random Mixed
+Scenario 1 — Mixed-heavy baseline
+Scenario 2 — High CPU load + asynchronous IO
+Scenario 3 — IO-heavy stress test
+Scenario 4 — CPU-heavy dominance test
+Scenario 5 — Mixed with close arrival times
+Scenario 6 — Many small IO bursts
+Scenario 7 — Long IO duration dominance
+Scenario 8 — Low CPU, frequent IO
+Scenario 9 — Wide arrival spread + CPU-heavy
+Scenario 10 — Short arrival, mixed processing
+Scenario 11 — Early I/O–Bound vs Late CPU–Bound Processes
+Scenario 12 — Many Short Tasks with One Extremely Long CPU Task
+Scenario 13 — Long Multi-I/O Tasks Mixed with Zero-I/O Short Tasks
+Scenario 14 — Early-Trigger vs Late-Trigger I/O Frequency Comparison
+Scenario 15 — Wide Arrival Time Distribution with Mixed Workloads
+Scenario 16 — High-Frequency Short I/O — Context Switch Stress Test
+Scenario 17 — Very Long I/O Tasks Mixed with Medium CPU Tasks
+Scenario 18 — Dense Early Arrivals with a Late Heavy CPU Task
+Scenario 19 — Similar I/O Frequencies but Divergent CPU Bursts
+Scenario 20 — Mid-to-Long Tasks with Widely Different I/O Stages
 
